@@ -1,16 +1,19 @@
 package com.pse.testserver.service;
 
+import com.pse.testserver.dto.UserDTO;
 import com.pse.testserver.entities.Event;
 import com.pse.testserver.entities.Group;
 import com.pse.testserver.entities.User;
 import com.pse.testserver.repository.EventRepository;
 import com.pse.testserver.repository.GroupRepository;
 import com.pse.testserver.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class implementing the business logic regarding the user entity, which includes (or may include
@@ -40,14 +43,17 @@ public class UserService {
     @Autowired
     EventRepository eventRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     /**
      * Searchs and gives all users with the given name.
      * @param name to search for. Empty String parameter gets all users.
      * @return list of users.
      */
     @Transactional
-    public List<User> getAllByName(String name) {
-        return userRepository.findByName(name);
+    public List<UserDTO> getAllByName(String name) {
+        return userRepository.findByName(name).stream().map(user -> toDTO(user)).collect(Collectors.toList());
     }
 
     /**
@@ -56,8 +62,8 @@ public class UserService {
      * @return found user.
      */
     @Transactional
-    public User getById(int id) {
-        return userRepository.findById(id);
+    public UserDTO getById(int id) {
+        return toDTO(userRepository.findById(id));
     }
 
 
@@ -147,9 +153,9 @@ public class UserService {
 
 
     @Transactional
-    public User getUserByMail(String userMail) {
+    public UserDTO getUserByMail(String userMail) {
         System.out.println("on service" + userMail);
-        return userRepository.findByMail(userMail);
+        return toDTO(userRepository.findByMail(userMail));
     }
 
 
@@ -159,9 +165,12 @@ public class UserService {
     }
 
     @Transactional
-    public User getUserById(int id) {
-        System.out.println("get user by id" + "id");
-        return userRepository.findById(id);
+    public UserDTO getUserById(int id) {
+        return toDTO(userRepository.findById(id));
+    }
+
+    public UserDTO toDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
     }
 
 }

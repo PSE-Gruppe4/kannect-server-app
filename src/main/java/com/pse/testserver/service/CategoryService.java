@@ -1,12 +1,15 @@
 package com.pse.testserver.service;
 
+import com.pse.testserver.dto.CategoryDTO;
 import com.pse.testserver.entities.Category;
 import com.pse.testserver.repository.CategoryRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class implementing the business logic regarding the Category entity, which includes (or may include
@@ -16,6 +19,9 @@ import java.util.List;
  */
 @Service
 public class CategoryService {
+
+    @Autowired
+    ModelMapper modelMapper;
 
     /**
      * Injected CategoryRepository class dependency.
@@ -27,9 +33,13 @@ public class CategoryService {
      * @return list of all persisted categories.
      */
     @Transactional
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDTO> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream().map(category -> toDTO(category)).collect(Collectors.toList());
     }
 
+    private CategoryDTO toDTO(Category category) {
+        return modelMapper.map(category, CategoryDTO.class);
+    }
 
 }

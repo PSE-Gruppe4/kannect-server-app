@@ -1,10 +1,13 @@
 package com.pse.testserver.controller;
 
-import com.pse.testserver.entities.Category;
+import com.pse.testserver.dto.CategoryDTO;
 import com.pse.testserver.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class CategoryController {
      */
     @GetMapping("/categories")
     @ResponseBody
-    public List<Category> getCategories() {
+    public List<CategoryDTO> getCategories() {
         return categoryService.getAllCategories();
     }
 

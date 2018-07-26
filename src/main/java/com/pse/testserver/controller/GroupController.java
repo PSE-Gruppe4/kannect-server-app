@@ -1,5 +1,6 @@
 package com.pse.testserver.controller;
 
+import com.pse.testserver.dto.GroupDTO;
 import com.pse.testserver.entities.Group;
 import com.pse.testserver.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class GroupController {
      */
     @GetMapping("/groups")
     @ResponseBody
-    public List<Group> getGroups(@RequestParam(value = "name", defaultValue = "") String name) {
+    public List<GroupDTO> getGroups(@RequestParam(value = "name", defaultValue = "") String name) {
         return groupService.getAllByName(name);
     }
 

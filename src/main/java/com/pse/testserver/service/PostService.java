@@ -1,9 +1,11 @@
 package com.pse.testserver.service;
 
+import com.pse.testserver.dto.PostDTO;
 import com.pse.testserver.entities.*;
 import com.pse.testserver.repository.CommentRepository;
 import com.pse.testserver.repository.PostRepository;
 import com.pse.testserver.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class implementing the business logic regarding the post entity, which includes (or may include
@@ -37,6 +40,9 @@ public class PostService {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     /**
      * Gets all posts owned by users, groups and events, which are subscribed/joined/participated by the given user
      * in chronological order, with the latest created post being the first item.
@@ -45,7 +51,7 @@ public class PostService {
      * @return list of posts.
      */
     @Transactional
-    public List<Post> getPersonalFeed(int userId) {
+    public List<PostDTO> getPersonalFeed(int userId) {
         List<Post> personalFeed = new LinkedList<>();
 
         User user = userRepository.findById(userId);
@@ -63,7 +69,7 @@ public class PostService {
         }
 
         personalFeed.sort(Comparator.comparing(Post::getDate));
-        return personalFeed;
+        return personalFeed.stream().map(post -> toDTO(post)).collect(Collectors.toList());
     }
 
     /**
@@ -72,8 +78,8 @@ public class PostService {
      * @return list of posts.
      */
     @Transactional
-    public List<Post> getAllByUser(int userId) {
-        return postRepository.findAllOwnedById(userId);
+    public List<PostDTO> getAllByUser(int userId) {
+        return postRepository.findAllOwnedById(userId).stream().map(post -> toDTO(post)).collect(Collectors.toList());
     }
 
     /**
@@ -82,8 +88,8 @@ public class PostService {
      * @return list of posts.
      */
     @Transactional
-    public List<Post> getAllByGroup(int groupId) {
-        return postRepository.findAllOwnedById(groupId);
+    public List<PostDTO> getAllByGroup(int groupId) {
+        return postRepository.findAllOwnedById(groupId).stream().map(post -> toDTO(post)).collect(Collectors.toList());
     }
 
     /**
@@ -92,8 +98,8 @@ public class PostService {
      * @return list of posts.
      */
     @Transactional
-    public List<Post> getAllByEvent(int eventId) {
-        return postRepository.findAllOwnedById(eventId);
+    public List<PostDTO> getAllByEvent(int eventId) {
+        return postRepository.findAllOwnedById(eventId).stream().map(post -> toDTO(post)).collect(Collectors.toList());
     }
 
     /**
@@ -159,6 +165,10 @@ public class PostService {
         Post post = comment.getPost();
         post.getComments().add(comment);
         postRepository.save(post);
+    }
+
+    public PostDTO toDTO(Post post) {
+        return modelMapper.map(post, PostDTO.class);
     }
 
 }

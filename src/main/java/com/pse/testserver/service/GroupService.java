@@ -1,12 +1,15 @@
 package com.pse.testserver.service;
 
+import com.pse.testserver.dto.GroupDTO;
 import com.pse.testserver.entities.Group;
 import com.pse.testserver.repository.GroupRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class implementing the business logic regarding the group entity, which includes (or may include
@@ -28,6 +31,9 @@ public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     /**
      * Method to look for groups, which include the given String in their names.
      *
@@ -35,8 +41,8 @@ public class GroupService {
      * @return list of wanted groups.
      */
     @Transactional
-    public List<Group> getAllByName(String name) {
-        return groupRepository.findAllByName(name);
+    public List<GroupDTO> getAllByName(String name) {
+        return groupRepository.findAllByName(name).stream().map(group -> toDTO(group)).collect(Collectors.toList());
     }
 
 
@@ -65,5 +71,9 @@ public class GroupService {
     @Transactional
     public void editGroup(Group editedGroup) {
         groupRepository.save(editedGroup);
+    }
+
+    private GroupDTO toDTO(Group group) {
+        return modelMapper.map(group, GroupDTO.class);
     }
 }

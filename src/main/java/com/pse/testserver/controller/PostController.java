@@ -1,5 +1,6 @@
 package com.pse.testserver.controller;
 
+import com.pse.testserver.dto.PostDTO;
 import com.pse.testserver.entities.Comment;
 import com.pse.testserver.entities.Post;
 import com.pse.testserver.entities.User;
@@ -35,7 +36,7 @@ public class PostController {
      */
     @GetMapping("/personalFeed")
     @ResponseBody
-    public List<Post> getPersonalFeed(@RequestParam(value = "userId") int userId) {
+    public List<PostDTO> getPersonalFeed(@RequestParam(value = "userId") int userId) {
         return postService.getPersonalFeed(userId);
     }
 
@@ -48,7 +49,7 @@ public class PostController {
      */
     @GetMapping("/groupFeed")
     @ResponseBody
-    public List<Post> getGroupFeed(@RequestParam(value = "groupId") int groupId) {
+    public List<PostDTO> getGroupFeed(@RequestParam(value = "groupId") int groupId) {
         return postService.getAllByGroup(groupId);
     }
 
@@ -60,7 +61,7 @@ public class PostController {
      */
     @GetMapping("/eventFeed")
     @ResponseBody
-    public List<Post> getEventFeed(@RequestParam(value = "eventId") int eventId) {
+    public List<PostDTO> getEventFeed(@RequestParam(value = "eventId") int eventId) {
         return postService.getAllByEvent(eventId);
     }
 
@@ -73,7 +74,7 @@ public class PostController {
      */
     @GetMapping("/userProfile")
     @ResponseBody
-    public List<Post> getUsersProfile(@RequestParam(value = "userId") int userId) {
+    public List<PostDTO> getUsersProfile(@RequestParam(value = "userId") int userId) {
         return postService.getAllByUser(userId);
     }
 

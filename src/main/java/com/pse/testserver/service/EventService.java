@@ -1,15 +1,16 @@
 package com.pse.testserver.service;
 
-import com.pse.testserver.entities.Category;
+import com.pse.testserver.dto.EventDTO;
 import com.pse.testserver.entities.Event;
-import com.pse.testserver.entities.User;
 import com.pse.testserver.repository.EventRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class implementing the business logic regarding the event entity, which includes (or may include
@@ -26,10 +27,9 @@ public class EventService {
     @Autowired
     private EventRepository eventRepository;
 
-    /**
-     * Injected EventRepositoryAdvancedImpl class dependency.
-     */
 
+    @Autowired
+    ModelMapper modelMapper;
 
 
     /**
@@ -38,8 +38,8 @@ public class EventService {
      * @return list of wanted events.
      */
     @Transactional
-    public List<Event> getAllByDate(Date date) {
-        return eventRepository.findAllByDate(date);
+    public List<EventDTO> getAllByDate(Date date) {
+        return eventRepository.findAllByDate(date).stream().map(event -> toDTO(event)).collect(Collectors.toList());
     }
 
     /**
@@ -48,8 +48,8 @@ public class EventService {
      * @return list of wanted events chronologically sorted with the latest event being the first element.
      */
     @Transactional
-    public List<Event> getByNameSortedByDate(String name) {
-        return eventRepository.findByNameSortedByDate(name);
+    public List<EventDTO> getByNameSortedByDate(String name) {
+        return eventRepository.findByNameSortedByDate(name).stream().map(event -> toDTO(event)).collect(Collectors.toList());
     }
 
     /**
@@ -77,5 +77,9 @@ public class EventService {
     @Transactional
     public void editEvent(Event editedEvent) {
         eventRepository.save(editedEvent);
+    }
+
+    private EventDTO toDTO(Event event) {
+        return modelMapper.map(event, EventDTO.class);
     }
 }

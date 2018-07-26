@@ -1,6 +1,7 @@
 package com.pse.testserver.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -17,6 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "users")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements Serializable {
 
     public User() {
@@ -65,14 +67,12 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "subscribed_id")},
             joinColumns = {@JoinColumn(name = "subscriber_id")})
     @Fetch(value = FetchMode.SUBSELECT)
-    @JsonIgnore
     private List<User> subscriptions;
 
     /**
      * Users, which subscribe this user.
      */
     @ManyToMany(mappedBy = "subscriptions")
-    @JsonIgnore
     private List<User> subscribers;
 
     /**
@@ -83,7 +83,6 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "group_id")},
             joinColumns = {@JoinColumn(name = "user_id")})
     @Fetch(value = FetchMode.SUBSELECT)
-    @JsonIgnore
     private List<Group> joinedGroups;
 
     /**
@@ -94,7 +93,6 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "event_id")},
             joinColumns = {@JoinColumn(name = "user_id")})
     @Fetch(value = FetchMode.SUBSELECT)
-    @JsonIgnore
     private List<Event> participatedEvents;
 
     /**
@@ -105,35 +103,30 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "post_id")},
             joinColumns = {@JoinColumn(name = "user_id")})
     @Fetch(value = FetchMode.SUBSELECT)
-    @JsonIgnore
     private List<Post> likedPosts;
 
     /**
      * Posts, which this user has created.
      */
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Post> createdPosts;
 
     /**
      * Groups, which this user has created.
      */
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Group> createdGroups;
 
     /**
      * Events, which this user has created.
      */
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Event> createdEvents;
 
     /**
      * Comments, which this user has created.
      */
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Comment> createdComments;
 
 

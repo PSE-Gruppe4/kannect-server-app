@@ -1,5 +1,6 @@
 package com.pse.testserver.controller;
 
+import com.pse.testserver.dto.UserDTO;
 import com.pse.testserver.entities.Event;
 import com.pse.testserver.entities.Group;
 import com.pse.testserver.entities.User;
@@ -34,21 +35,21 @@ public class UserController {
      */
     @GetMapping("/users")
     @ResponseBody
-    public List<User> getUsers(@RequestParam(value = "name", defaultValue = "") String name) {
+    public List<UserDTO> getUsers(@RequestParam(value = "name", defaultValue = "") String name) {
         return userService.getAllByName(name);
     }
 
 
 
     @GetMapping("/userByMail")
-    public User getUserByMail(@RequestParam(value = "userMail") String userMail) {
+    public UserDTO getUserByMail(@RequestParam(value = "userMail") String userMail) {
         System.out.println("on controller" + userMail);
         return userService.getUserByMail(userMail);
     }
 
 
     @GetMapping("/userById")
-    public User getUserById(@RequestParam(value = "userId") int id) {
+    public UserDTO getUserById(@RequestParam(value = "userId") int id) {
         return userService.getUserById(id);
     }
 

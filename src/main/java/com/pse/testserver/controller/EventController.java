@@ -1,5 +1,6 @@
 package com.pse.testserver.controller;
 
+import com.pse.testserver.dto.EventDTO;
 import com.pse.testserver.entities.Event;
 import com.pse.testserver.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class EventController {
      * @return list of events.
      */
     @GetMapping("/events")
-    public List<Event> getEvents(@RequestParam(value = "name", defaultValue = "") String name) {
+    public List<EventDTO> getEvents(@RequestParam(value = "name", defaultValue = "") String name) {
         return eventService.getByNameSortedByDate(name);
     }
 

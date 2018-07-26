@@ -1,6 +1,7 @@
 package com.pse.testserver.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -13,13 +14,13 @@ import java.util.List;
  */
 @Entity
 @Table(name = "categories")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Category {
 
     /**
      * Subcategories, which fall into this category.
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, orphanRemoval = true)
-    @JsonIgnore
     private List<Subcategory> subcategories;
 
     /**
@@ -39,13 +40,11 @@ public class Category {
      * Events, which fall into this category.
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, orphanRemoval = true)
-    @JsonIgnore
     private List<Event> events;
     /**
      * Groups, which fall into this category.
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, orphanRemoval = true)
-    @JsonIgnore
     private List<Group> groups;
 
     public Category() {
